@@ -1,0 +1,11 @@
+{
+  "name": "com.mauricioreisdoefer.draftx",
+  "version": "0.0.1",
+  "displayName": "Draftx",
+  "description": "Scripts prontos para acelerar o desenvolvimento de projetos 2D.",
+  "unity": "2022.3",
+  "author": {
+    "name": "Maurício Reisdoefer",
+    "url": "https://github.com/MauricioReisdoefer"
+  }
+}
