@@ -95,6 +95,3 @@ Uma classe que herda de `ScriptableObject` (indicando que é um ativo de dados c
 | `elementName` | `string` | O nome do elemento de dano (ex: "Fogo"). |
 
 Esta classe é usada dentro do `SufferContext` para permitir que os `ISufferModifier` implementem lógicas baseadas no tipo de dano (ex: resistência a fogo).
-
----
-*Documentação gerada por Manus AI.*
