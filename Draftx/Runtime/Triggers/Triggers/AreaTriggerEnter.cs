@@ -7,7 +7,7 @@ public class AreaTriggerEnter : MonoBehaviour, ITrigger
 {
     public event Action<IContext> OnTriggered;
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected void OnTriggerEnter2D(Collider2D collision)
     {
         TriggerContext triggerContext = new TriggerContext(collision.gameObject, collision);
         OnTriggered?.Invoke(triggerContext);
