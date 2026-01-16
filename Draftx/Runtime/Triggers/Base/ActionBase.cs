@@ -10,7 +10,7 @@ public class ActionBase : MonoBehaviour, ITriggerAction
         
     }
 
-    protected void Awake()
+    protected virtual void Awake()
     {
         triggers = GetComponents<ITrigger>();
         foreach(ITrigger trigger in triggers)

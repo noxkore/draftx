@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShakeContext : IFeedbackContext
+public class ShakeContext : IFeedbackContext, IContext
 {
     public float Intensity;
     public float Duration;
