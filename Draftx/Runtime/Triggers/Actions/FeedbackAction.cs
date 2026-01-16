@@ -6,9 +6,8 @@ public class FeedbackAction : ActionBase
 {
     private IFeedback[] feedbacks;
 
-    protected override void Awake()
+    protected void Start()
     {
-        base.Awake();
         feedbacks = GetComponents<IFeedback>();
     }
 

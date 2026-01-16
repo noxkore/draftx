@@ -6,6 +6,17 @@ using Cinemachine;
 [RequireComponent(typeof(CinemachineImpulseSource))]
 public class CameraShakeFeedback : FeedbackBase
 {
+    [Header("Default Shake Settings")]
+    [SerializeField] private float intensity = 1f;
+    [SerializeField] private float duration = 0.2f;
+    [SerializeField] private Vector2 direction = Vector2.one;
+
+    [Header("Impulse Definition")]
+    [SerializeField] private float maxAmplitude = 1f;
+    [SerializeField] private float dissipationRate = 1f;
+    [SerializeField] private float frequency = 1f;
+    [SerializeField] private AnimationCurve curve;
+
     private CinemachineImpulseSource impulseSource;
 
     private void Awake()
@@ -16,27 +27,31 @@ public class CameraShakeFeedback : FeedbackBase
 
     public override void Play(IFeedbackContext context)
     {
-        if (context is not ShakeContext shake)
-            return;
+        float finalIntensity = intensity;
+        float finalDuration = duration;
+        Vector2 finalDirection = direction;
+        float finalAmplitude = maxAmplitude;
+        float finalDissipation = dissipationRate;
+        float finalFrequency = frequency;
+        AnimationCurve finalCurve = curve;
 
         var def = impulseSource.m_ImpulseDefinition;
+        def.m_ImpulseDuration = finalDuration;
+        def.m_AmplitudeGain = finalAmplitude;
+        def.m_DissipationRate = finalDissipation;
+        def.m_FrequencyGain = finalFrequency;
 
-        def.m_ImpulseDuration = shake.Duration;
-        def.m_AmplitudeGain = shake.MaxAmplitude;
-        def.m_DissipationRate = shake.DissipationRate;
-        def.m_FrequencyGain = shake.Frequency;
-
-        if (shake.Curve != null)
+        if (finalCurve != null)
         {
             def.m_ImpulseShape = CinemachineImpulseDefinition.ImpulseShapes.Custom;
-            def.m_CustomImpulseShape = shake.Curve;
+            def.m_CustomImpulseShape = finalCurve;
         }
 
         Vector3 direction3D = new Vector3(
-            shake.Direction.x,
-            shake.Direction.y,
+            finalDirection.x,
+            finalDirection.y,
             0f
-        ).normalized * shake.Intensity;
+        ).normalized * finalIntensity;
 
         impulseSource.GenerateImpulse(direction3D);
     }

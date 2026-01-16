@@ -9,10 +9,10 @@ public class ListenerTrigger : MonoBehaviour, ITrigger
 
     private IListener[] listeners;
 
-    protected void Awake()
+    protected void Start()
     {
         listeners = GetComponents<IListener>();
-
+         
         foreach (var listener in listeners)
         {
             listener.OnListened += HandleListened;
