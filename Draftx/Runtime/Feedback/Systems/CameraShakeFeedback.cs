@@ -27,6 +27,7 @@ public class CameraShakeFeedback : FeedbackBase
 
     public override void Play(IFeedbackContext context)
     {
+        print("BALANÇANDO");
         float finalIntensity = intensity;
         float finalDuration = duration;
         Vector2 finalDirection = direction;

@@ -6,8 +6,14 @@ public class FeedbackAction : ActionBase
 {
     private IFeedback[] feedbacks;
 
-    protected void Start()
+    protected override void Awake()
     {
+        triggers = GetComponents<ITrigger>();
+        foreach (ITrigger trigger in triggers)
+        {
+            trigger.OnTriggered += Execute;
+        }
+
         feedbacks = GetComponents<IFeedback>();
     }
 
@@ -16,12 +22,9 @@ public class FeedbackAction : ActionBase
         if (feedbacks == null || feedbacks.Length == 0)
             return;
 
-        if (context is not IFeedbackContext feedbackContext)
-            return;
-
         foreach (var feedback in feedbacks)
         {
-            feedback.Play(feedbackContext);
+            feedback.Play(new ShakeContext()) ;
         }
     }
 }
