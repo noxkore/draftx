@@ -1,59 +1,85 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+ï»¿using UnityEngine;
 using Cinemachine;
 
 [RequireComponent(typeof(CinemachineImpulseSource))]
 public class CameraShakeFeedback : FeedbackBase
 {
-    [Header("Default Shake Settings")]
-    [SerializeField] private float intensity = 1f;
-    [SerializeField] private float duration = 0.2f;
-    [SerializeField] private Vector2 direction = Vector2.one;
-
-    [Header("Impulse Definition")]
-    [SerializeField] private float maxAmplitude = 1f;
-    [SerializeField] private float dissipationRate = 1f;
+    [Header("Impulse Shake")]
+    [SerializeField] private float intensity = 0.3f;
+    [SerializeField] private float duration = 0.15f;
     [SerializeField] private float frequency = 1f;
-    [SerializeField] private AnimationCurve curve;
+    [SerializeField] private float dissipation = 0.8f;
 
-    private CinemachineImpulseSource impulseSource;
+    [Header("Continuous Shake")]
+    [SerializeField] private float interval = 0.12f;
+    [SerializeField] private float continuousDuration = 1.5f;
+
+    private CinemachineImpulseSource impulse;
+
+    private bool continuousActive;
+    private float intervalTimer;
+    private float durationTimer;
 
     private void Awake()
     {
-        impulseSource = GetComponent<CinemachineImpulseSource>();
-        impulseSource.m_DefaultVelocity.z = 0f;
+        impulse = GetComponent<CinemachineImpulseSource>();
+        impulse.m_DefaultVelocity = Vector3.up;
+
+        continuousActive = false;
+    }
+
+    private void Update()
+    {
+        if (!continuousActive)
+            return;
+
+        intervalTimer -= Time.deltaTime;
+        durationTimer -= Time.deltaTime;
+
+        if (intervalTimer <= 0f)
+        {
+            FireImpulse();
+            intervalTimer = interval;
+        }
+
+        if (durationTimer <= 0f)
+        {
+            StopContinuous();
+        }
     }
 
     public override void Play(IFeedbackContext context)
     {
-        print("BALANÇANDO");
-        float finalIntensity = intensity;
-        float finalDuration = duration;
-        Vector2 finalDirection = direction;
-        float finalAmplitude = maxAmplitude;
-        float finalDissipation = dissipationRate;
-        float finalFrequency = frequency;
-        AnimationCurve finalCurve = curve;
-
-        var def = impulseSource.m_ImpulseDefinition;
-        def.m_ImpulseDuration = finalDuration;
-        def.m_AmplitudeGain = finalAmplitude;
-        def.m_DissipationRate = finalDissipation;
-        def.m_FrequencyGain = finalFrequency;
-
-        if (finalCurve != null)
+        if (continuousDuration > 0f)
         {
-            def.m_ImpulseShape = CinemachineImpulseDefinition.ImpulseShapes.Custom;
-            def.m_CustomImpulseShape = finalCurve;
+            StartContinuous();
         }
+        else
+        {
+            FireImpulse();
+        }
+    }
 
-        Vector3 direction3D = new Vector3(
-            finalDirection.x,
-            finalDirection.y,
-            0f
-        ).normalized * finalIntensity;
+    private void FireImpulse()
+    {
+        var def = impulse.m_ImpulseDefinition;
+        def.m_ImpulseDuration = duration;
+        def.m_FrequencyGain = frequency;
+        def.m_DissipationRate = dissipation;
+        impulse.m_ImpulseDefinition = def;
 
-        impulseSource.GenerateImpulse(direction3D);
+        impulse.GenerateImpulse(Vector3.up * intensity);
+    }
+
+    private void StartContinuous()
+    {
+        continuousActive = true;
+        intervalTimer = 0f;
+        durationTimer = continuousDuration;
+    }
+
+    public void StopContinuous()
+    {
+        continuousActive = false;
     }
 }

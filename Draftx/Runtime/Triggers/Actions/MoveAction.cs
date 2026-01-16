@@ -20,7 +20,7 @@ public class MoveAction : ActionBase
     [SerializeField] protected float EaseStrengthX = 1f;
     [SerializeField] protected float EaseStrengthY = 1f;
 
-    private Coroutine moveRoutine;
+    protected Coroutine moveRoutine;
 
     public override void Execute(IContext context)
     {
