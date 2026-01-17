@@ -68,7 +68,7 @@ public class CameraShakeFeedback : FeedbackBase
         def.m_DissipationRate = dissipation;
         impulse.m_ImpulseDefinition = def;
 
-        impulse.GenerateImpulse(Vector3.up * intensity);
+        impulse.GenerateImpulse(Vector3.zero * intensity);
     }
 
     private void StartContinuous()
