@@ -5,22 +5,36 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class BaseSufferPipeline : MonoBehaviour, ISufferPipeline
 {
-    private BaseHealthComponent health;
-    private ISufferModifier[] modifiers;
+    protected BaseHealthComponent health;
+    protected ISufferModifier[] modifiers;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         health = GetComponent<BaseHealthComponent>();
         modifiers = GetComponents<ISufferModifier>();
     }
 
-    public void Suffer(float amount, SufferContext context)
+    public virtual void Suffer(float amount, SufferContext context)
+    {
+        if (context.Equals(default))
+            context = SufferContext.Default;
+
+        float finalAmount = ProcessModifiers(amount, context);
+        ApplyDamage(finalAmount, context);
+    }
+
+    protected virtual float ProcessModifiers(float amount, SufferContext context)
     {
         float finalAmount = amount;
 
         for (int i = 0; i < modifiers.Length; i++)
             finalAmount = modifiers[i].Modify(finalAmount, context);
 
-        health.SufferDamage(finalAmount);
+        return finalAmount;
+    }
+
+    protected virtual void ApplyDamage(float amount, SufferContext context)
+    {
+        health.SufferDamage(amount);
     }
 }
