@@ -23,7 +23,7 @@ public class CameraShakeFeedback : FeedbackBase
     private void Awake()
     {
         impulse = GetComponent<CinemachineImpulseSource>();
-        impulse.m_DefaultVelocity = Vector3.up;
+        impulse.m_DefaultVelocity = Vector3.zero;
 
         continuousActive = false;
     }
