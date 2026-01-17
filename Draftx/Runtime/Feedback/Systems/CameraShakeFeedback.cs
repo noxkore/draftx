@@ -68,7 +68,10 @@ public class CameraShakeFeedback : FeedbackBase
         def.m_DissipationRate = dissipation;
         impulse.m_ImpulseDefinition = def;
 
-        impulse.GenerateImpulse(Vector3.zero * intensity);
+        Vector2 randomDir = UnityEngine.Random.insideUnitCircle.normalized;
+        Vector3 shakeDir = new Vector3(randomDir.x, randomDir.y, 0f) * intensity;
+
+        impulse.GenerateImpulse(shakeDir);
     }
 
     private void StartContinuous()
