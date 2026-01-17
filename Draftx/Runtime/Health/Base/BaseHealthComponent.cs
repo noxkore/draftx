@@ -37,4 +37,25 @@ public abstract class BaseHealthComponent : MonoBehaviour, IHealthComponent
             Die();
         }
     }
+
+    protected void InvokeHealthChanged()
+    {
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+    }
+
+    protected void InvokeDamageTaken(float amount)
+    {
+        OnDamageTaken?.Invoke(amount);
+    }
+
+    protected void InvokeHealed(float amount)
+    {
+        OnHealed?.Invoke(amount);
+    }
+
+    protected void InvokeDeath()
+    {
+        OnDeath?.Invoke();
+    }
+
 }
