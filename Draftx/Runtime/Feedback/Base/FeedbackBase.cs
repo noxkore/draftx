@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class FeedbackBase : MonoBehaviour, IFeedback
 {
-    public abstract void Play(IFeedbackContext context);
+    public abstract void Play(IFeedbackContext context, float localIntensity);
 }
