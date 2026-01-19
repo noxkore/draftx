@@ -20,6 +20,8 @@ public class CameraShakeFeedback : FeedbackBase
     private float intervalTimer;
     private float durationTimer;
 
+    private float currentLocalIntensity = 1f;
+
     private void Awake()
     {
         impulse = GetComponent<CinemachineImpulseSource>();
@@ -38,7 +40,7 @@ public class CameraShakeFeedback : FeedbackBase
 
         if (intervalTimer <= 0f)
         {
-            FireImpulse();
+            FireImpulse(currentLocalIntensity);
             intervalTimer = interval;
         }
 
@@ -48,19 +50,21 @@ public class CameraShakeFeedback : FeedbackBase
         }
     }
 
-    public override void Play(IFeedbackContext context)
+    public override void Play(IFeedbackContext context, float localIntensity)
     {
+        currentLocalIntensity = Mathf.Max(0f, localIntensity);
+
         if (continuousDuration > 0f)
         {
             StartContinuous();
         }
         else
         {
-            FireImpulse();
+            FireImpulse(currentLocalIntensity);
         }
     }
 
-    private void FireImpulse()
+    private void FireImpulse(float localIntensity)
     {
         var def = impulse.m_ImpulseDefinition;
         def.m_ImpulseDuration = duration;
@@ -68,8 +72,15 @@ public class CameraShakeFeedback : FeedbackBase
         def.m_DissipationRate = dissipation;
         impulse.m_ImpulseDefinition = def;
 
-        Vector2 randomDir = UnityEngine.Random.insideUnitCircle.normalized;
-        Vector3 shakeDir = new Vector3(randomDir.x, randomDir.y, 0f) * intensity;
+        Vector2 randomDir = Random.insideUnitCircle.normalized;
+
+        float finalIntensity = intensity * localIntensity;
+
+        Vector3 shakeDir = new Vector3(
+            randomDir.x,
+            randomDir.y,
+            0f
+        ) * finalIntensity;
 
         impulse.GenerateImpulse(shakeDir);
     }

@@ -6,6 +6,10 @@ public class FeedbackAction : ActionBase
 {
     private IFeedback[] feedbacks;
 
+    [Header("Runtime")]
+    [SerializeField, Range(0f, 5f)]
+    private float localIntensity = 1f;
+
     protected override void Awake()
     {
         triggers = GetComponents<ITrigger>();
@@ -17,14 +21,19 @@ public class FeedbackAction : ActionBase
         feedbacks = GetComponents<IFeedback>();
     }
 
+    public void SetLocalIntensity(float value)
+    {
+        localIntensity = Mathf.Max(0f, value);
+    }
+
     public override void Execute(IContext context)
     {
         if (feedbacks == null || feedbacks.Length == 0)
             return;
 
-        foreach (var feedback in feedbacks)
+        for (int i = 0; i < feedbacks.Length; i++)
         {
-            feedback.Play(new ShakeContext()) ;
+            feedbacks[i].Play(null, localIntensity);
         }
     }
 }
