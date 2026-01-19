@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IFeedback
 {
-    void Play(IFeedbackContext context);
+    void Play(IFeedbackContext context, float localIntensity);
 }
